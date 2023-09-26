@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 const mysql = require("./connection");
-
-const port = 4000;
+require('dotenv').config();
+const port = process.env.PORT || 80;
 
 app.use(express.static(__dirname+"/public"));
 app.set('view engine', 'ejs');
