@@ -1,15 +1,15 @@
 const mysql = require('mysql');
 
-const port = process.env.PORT || 4000; // Use 4000 if PORT is not defined
-const dbHost = process.env.DB_HOST || 'localhost';
-const dbUser = process.env.DB_USER || 'defaultUser';
-const dbPassword = process.env.DB_PASSWORD || 'defaultPassword';
+const port = process.env.PORT; // Use 4000 if PORT is not defined
+const dbHost = process.env.DB_HOST ;
+const dbUser = process.env.DB_USER ;
+const dbPassword = process.env.DB_PASSWORD;
 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'defaultUser',
-    password: process.env.DB_PASSWORD || 'defaultPassword',
-    database: 'sih'
+    host: process.env.DB_HOST ,
+    user: process.env.DB_USER ,
+    password: process.env.DB_PASSWORD ,
+    database: process.env.DB
 });
 
 db.connect(err => {
