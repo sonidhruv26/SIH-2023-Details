@@ -4,8 +4,9 @@ const mysql = require("./connection");
 require('dotenv').config();
 const port = process.env.PORT || 80;
 
-app.use(express.static(__dirname+"/public"));
 app.set('view engine', 'ejs');
+app.set("views","./Views");
+app.use(express.static(__dirname+"/public"));
 
 // Rest of your code, including routes
 // How many problems we want to show on each page
