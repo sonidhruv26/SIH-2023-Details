@@ -34,13 +34,10 @@ app.get("/", (req, resp) => {
         viewAll = `Select * from sih_details LIMIT ${startingLimit}, ${resultsPerPage}`;
         mysql.query(viewAll, (err, result) => {
             if (err) throw err;
-            let iterator = page - 5 < 1 ? 1 : page - 5;
-            let endingLink =
-                iterator + 9 <= numberOfPages
-                    ? iterator + 9
-                    : page + (numberOfPages - page);
-            if (endingLink < page + 4) {
-                iterator -= page + 4 - numberOfPages;
+            let iterator = page - 2 > 0 ? page - 2 : 1;
+            let endingLink = iterator + 4 <= numberOfPages ? iterator + 4 : numberOfPages;
+            if (endingLink < page + 2) {
+                iterator -= page + 2 - numberOfPages;
             }
             resp.render("index", {
                 data: result,

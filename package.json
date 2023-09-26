@@ -11,14 +11,17 @@
   "author": "sonidhruv26 <sonidhruv.2603@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
     "handlebars": "^4.7.8",
     "hbs": "^4.2.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "path": "^0.12.7"
   },
   "repository": "https://github.com/sonidhruv26/SIH-2023-Details.git"
 }
