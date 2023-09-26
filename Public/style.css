@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&family=Poppins&display=swap');
+
+body {
+    background-color: rgb(221, 144, 1) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.description-data {
+    max-height: 100px;
+    overflow: hidden !important;
+    transition: max-height 0.5s ease-in-out;
+}
+
+.show-more {
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in-out;
+}
+
+.btn-outline-success {
+    --bs-btn-color: #fd7e14;
+    --bs-btn-border-color: #fd7e14;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #fd7e14;
+    --bs-btn-hover-border-color: #fd7e14;
+    --bs-btn-focus-shadow-rgb: 253, 126, 20;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #fd7e14;
+    --bs-btn-active-border-color: #fd7e14;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fd7e14;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #fd7e14;
+    --bs-gradient: none;
+}
+
+.scroll-down {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: orange;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+.scroll-down i {
+    font-size: 20px;
+    color: white;
+}
