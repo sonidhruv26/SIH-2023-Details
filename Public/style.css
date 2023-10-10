@@ -10,11 +10,6 @@ body {
     color: darkorange;
 }
 
-.card-title {
-    /* text-align: justify;
-    overflow: visible; */
-}
-
 .description-data {
     text-align: justify;
     max-height: 50px;

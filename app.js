@@ -25,6 +25,7 @@ app.get("/", (req, resp) => {
     const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
 
     let page = req.query.page ? Number(req.query.page) : 1;
+    // console.log(page);
     if (page > numberOfPages) {
       resp.redirect("/?page=" + encodeURIComponent(numberOfPages));
     } else if (page < 1) {
@@ -43,7 +44,8 @@ app.get("/", (req, resp) => {
       if (endingLink < page + 2) {
         iterator -= page + 2 - numberOfPages;
       }
-      // For filter results
+
+      // For filter select-items
       const themeQry =
         "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
       const categoryQry = "SELECT DISTINCT Category FROM sih_details";
@@ -83,7 +85,7 @@ app.get("/filter", (req, resp) => {
   const category = req.query.category;
   const org = req.query.org;
 
-  console.log(theme, category, org);
+  // console.log(theme, category, org);
 
   if (theme === `` && category === `` && org === ``) {
     viewAll = `Select * from sih_details `;
@@ -115,10 +117,11 @@ app.get("/filter", (req, resp) => {
     }
 
     let page = req.query.page ? Number(req.query.page) : 1;
+    console.log(req.query.page);
     if (page > numberOfPages) {
-      resp.redirect("/?page=" + encodeURIComponent(numberOfPages));
+      resp.redirect("&page=" + encodeURIComponent(numberOfPages));
     } else if (page < 1) {
-      resp.redirect("/?page=" + encodeURIComponent("1"));
+      resp.redirect("&page=" + encodeURIComponent("1"));
     }
 
     // Determine the SQL limit starting number
@@ -140,6 +143,11 @@ app.get("/filter", (req, resp) => {
           endingLink = Math.min(iterator + 4, numberOfPages); // Re-calculate endingLink
         }
       }
+
+      const paginationLinks = {
+        previous: page > 1 ? `/filter?page=${page - 1}&theme=${theme}&category=${category}&org=${org}` : null,
+        next: page < numberOfPages ? `/filter?page=${page + 1}&theme=${theme}&category=${category}&org=${org}` : null
+      };
 
       // For filter results
       const themeQry =
@@ -165,7 +173,8 @@ app.get("/filter", (req, resp) => {
               orgResult,
               theme,
               category,
-              org
+              org,
+              paginationLinks
             });
           });
         });

@@ -132,32 +132,33 @@
 
   <nav aria-label="Page navigation example" id="bottom">
     <ul class="pagination justify-content-center">
-      <% if(page> 1) { %>
-        <li class="page-item"><a class="page-link" href="/?page=<%=page-1%>">Previous</a></li>
-        <% } %>
-          <% if(page <=1) { %>
-            <li class="page-item disabled"><a class="page-link" href="/?page=<%=page-1%>">Previous</a></li>
-            <% } %>
-              <% for(let i=iterator; i <=endingLink; i++) { %>
-                <% if(i===page) { %>
-                  <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="/?page=<%=i%>">
-                      <%=i%>
+      <% if(paginationLinks.previous) { %>
+        <li class="page-item"><a class="page-link" href="<%= paginationLinks.previous %>">Previous</a></li>
+        <% } else { %>
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          <% } %>
+
+            <% for(let i=iterator; i <=endingLink; i++) { %>
+              <% if(i===page) { %>
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                    <%= i %>
+                  </span>
+                </li>
+                <% } else { %>
+                  <li class="page-item">
+                    <a class="page-link"
+                      href="/filter?page=<%= i %>&theme=<%= theme %>&category=<%= category %>&org=<%= org %>">
+                      <%= i %>
                     </a>
                   </li>
-                  <% continue; %>
+                  <% } %>
                     <% } %>
-                      <li class="page-item"><a class="page-link" href="/?page=<%=i%>">
-                          <%=i%>
-                        </a></li>
-                      <% } %>
-                        <% if(page < numberOfPages) { %>
-                          <li class="page-item"><a class="page-link" href="/?page=<%=page+1%>">Next</a></li>
+                      <% if (paginationLinks.next) { %>
+                        <li class="page-item"><a class="page-link" href="<%= paginationLinks.next %>">Next</a></li>
+                        <% } else { %>
+                          <li class="page-item disabled"><span class="page-link">Next</span></li>
                           <% } %>
-                            <% if(page>= numberOfPages) { %>
-                              <li class="page-item disabled"><a class="page-link" href="/?page=<%=page+1%>">Next</a>
-                              </li>
-                              <% } %>
     </ul>
   </nav>
 
@@ -184,11 +185,6 @@
         description.classList.toggle("show-more");
         button.innerHTML = button.innerHTML === "Read More" ? "Read Less" : "Read More";
       });
-    });
-
-    const reset = document.getElementById('reset');
-    reset.addEventListener("click", () => {
-      window.location = "/";
     });
 
     const filterBtn = document.querySelector('.filter-btn');
