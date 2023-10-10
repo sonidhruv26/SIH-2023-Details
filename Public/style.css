@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&family=Poppins&display=swap');
 
 body {
-    background-color: rgb(221, 144, 1)   !important;
+    background-color: rgb(221, 144, 1) !important;
     font-family: 'Montserrat', sans-serif !important;
     font-family: 'Poppins', sans-serif !important;
 }
@@ -11,13 +11,19 @@ body {
 }
 
 .card-title {
-    text-align: justify;
+    /* text-align: justify;
+    overflow: visible; */
 }
 
 .description-data {
     text-align: justify;
     max-height: 50px;
     overflow: hidden !important;
+    transition: max-height 0.5s ease;
+}
+
+.show-more {
+    max-height: 1000px;
     transition: max-height 0.5s ease-in-out;
 }
 
@@ -47,28 +53,6 @@ body {
     list-style: none;
 }
 
-.show-more {
-    max-height: 1000px;
-    transition: max-height 0.5s ease-in-out;
-}
-
-/* .btn-outline-success {
-    --bs-btn-color: #fd7e14;
-    --bs-btn-border-color: #fd7e14;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #fd7e14;
-    --bs-btn-hover-border-color: #fd7e14;
-    --bs-btn-focus-shadow-rgb: 253, 126, 20;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #fd7e14;
-    --bs-btn-active-border-color: #fd7e14;
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --bs-btn-disabled-color: #fd7e14;
-    --bs-btn-disabled-bg: transparent;
-    --bs-btn-disabled-border-color: #fd7e14;
-    --bs-gradient: none;
-} */
-
 .badge {
     font-size: 14px;
 }
@@ -87,6 +71,44 @@ body {
     align-items: center;
     text-decoration: none;
     z-index: 9999;
+}
+
+.filter {
+    background-color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: height 0.2s ease;
+}
+
+.filter-div {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s linear;
+}
+
+.filter-div.expanded {
+    max-height: 800px;
+}
+
+.submit,
+.reset {
+    margin-block: 1rem;
+}
+
+.filter-btn {
+    margin-block: 10px;
+}
+
+.filter-btn.active {
+    color: #0d6efd;
+    background-color: transparent;
+    border-color: #0d6efd;
+}
+
+.filter-btn.active:hover {
+    color: var(--bs-btn-active-color);
+    background-color: #0d6efd;
+    border-color: var(--bs-btn-active-border-color);
 }
 
 .scroll-down:hover {
@@ -113,8 +135,9 @@ footer a {
     color: #198754;
 }
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px) {
     .scroll-down {
         display: none !important;
     }
+
 }

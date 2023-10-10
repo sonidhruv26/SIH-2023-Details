@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,10 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="manifest" href="assets/site.webmanifest">
+  <script type="text/javascript" src="https://kit.fontawesome.com/50a82cfbfd.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css" type="text/css">
   <title>SIH</title>
 </head>
@@ -25,24 +28,102 @@
 
   <div class="container-fluid">
     <h1 class="mb-4">List of Smart India Hackathon Problems</h1>
-    <% data.forEach(entry=> { %>
-    <div class="card mb-3">
-      <div class="row g-0">
-        <div class="col-md-12">
-          <div class="card-body">
-            <h6 class="card-title text-body-secondary"><%= entry.ID %></h6>
-            <h2 class="card-title"><%= entry.Title %></h2>
-            <p class="description-data card-text"><%= entry.Description %></p>
-            <button class="btn btn-outline-success readmore mb-3" >Read More</button>
-            <p class="card-text"><small class="text-body-secondary"><%= entry.ProblemCreatorsOrganization %></small></p>
-            <p class="card-text"><small class="text-body-secondary"><%= entry.ProblemCreatorsDepartment %></small></p>
-            <span class="badge text-bg-success"><%= entry.TechnologyBucket %></span>
-            <span class="badge text-bg-secondary"><%= entry.Category %></span>
+    <form action="/filter" method="get" class="filter mb-3">
+      <button type="button" class="btn btn-primary filter-btn" data-bs-toggle="button" id="filter-btn"><i
+          class="fa-solid fa-filter"></i>
+        Filter</button>
+      <div class="filter-div">
+        <div class="row-auto">
+          <div class="col-auto">
+            <label for="theme" class="form-label">Select Theme</label>
+            <select name="theme" id="theme" class="form-select">
+              <% if (theme !=="" ) { %>
+                <option value="<%= theme %>" selected>
+                  <%= theme %>
+                </option>
+                <% } %>
+                  <hr>
+                  <option value="">All</option>
+                  <% themeResult.forEach(entry=> { %>
+                    <option value="<%= entry.TechnologyBucket %>">
+                      <%= entry.TechnologyBucket %>
+                    </option>
+                    <% }); %>
+            </select>
+          </div>
+          <div class="col-auto">
+            <label for="category" class="form-label">Category</label>
+            <select name="category" id="category" class="form-select">
+              <% if (category !=="" ) { %>
+                <option value="<%= category %>" selected>
+                  <%= category %>
+                </option>
+                <% } %>
+                  <hr>
+                  <option value="">All</option>
+                  <% categoryResult.forEach(entry=> { %>
+                    <option value="<%= entry.Category %>">
+                      <%= entry.Category %>
+                    </option>
+                    <% }); %>
+            </select>
+          </div>
+          <div class="col-auto">
+            <label for="org" class="form-label">Organization</label>
+            <select name="org" id="org" class="form-select">
+              <% if (org !=="" ) { %>
+                <option value="<%= org %>" selected>
+                  <%= org %>
+                </option>
+                <% } %>
+                  <hr>
+                  <option value="">All</option>
+                  <% orgResult.forEach(entry=> { %>
+                    <option value="<%= entry.ProblemCreatorsOrganization %>">
+                      <%= entry.ProblemCreatorsOrganization %>
+                    </option>
+                    <% }); %>
+            </select>
+          </div>
+          <div class="col-auto">
+            <input class="btn btn-success submit" type="submit" value="Submit">
+            <input type="reset" class="btn btn-danger reset" id="reset" value="Reset">
           </div>
         </div>
       </div>
-    </div>
-    <% }); %>
+    </form>
+    <% data.forEach(entry=> { %>
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-12">
+            <div class="card-body">
+              <h6 class="card-title text-body-secondary">
+                <%= entry.ID %>
+              </h6>
+              <h2 class="card-title">
+                <%= entry.Title %>
+              </h2>
+              <p class="description-data card-text">
+                <%= entry.Description %>
+              </p>
+              <button class="btn btn-outline-success readmore mb-3">Read More</button>
+              <p class="card-text"><small class="text-body-secondary">
+                  <%= entry.ProblemCreatorsOrganization %>
+                </small></p>
+              <p class="card-text"><small class="text-body-secondary">
+                  <%= entry.ProblemCreatorsDepartment %>
+                </small></p>
+              <span class="badge text-bg-success">
+                <%= entry.TechnologyBucket %>
+              </span>
+              <span class="badge text-bg-secondary">
+                <%= entry.Category %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }); %>
   </div>
 
   <a class="scroll-down" href="#bottom">
@@ -51,39 +132,48 @@
 
   <nav aria-label="Page navigation example" id="bottom">
     <ul class="pagination justify-content-center">
-      <% if(page > 1) { %>
-      <li class="page-item"><a class="page-link" href="/?page=<%=page-1%>">Previous</a></li>
-      <% } %>
-      <% if(page <= 1) { %>
-        <li class="page-item disabled"><a class="page-link" href="/?page=<%=page-1%>">Previous</a></li>
-      <% } %>
-      <% for(let i = iterator; i <= endingLink; i++) { %>
-        <% if(i === page) { %>
-          <li class="page-item active" aria-current="page">
-            <a class="page-link" href="/?page=<%=i%>"><%=i%></a>
-          </li>
-          <% continue; %>
+      <% if(page> 1) { %>
+        <li class="page-item"><a class="page-link" href="/?page=<%=page-1%>">Previous</a></li>
         <% } %>
-        <li class="page-item"><a class="page-link" href="/?page=<%=i%>"><%=i%></a></li>
-      <% } %>
-      <% if(page < numberOfPages) { %>
-        <li class="page-item"><a class="page-link" href="/?page=<%=page+1%>">Next</a></li>
-      <% } %>
-      <% if(page >= numberOfPages) { %>
-        <li class="page-item disabled"><a class="page-link" href="/?page=<%=page+1%>">Next</a></li>
-      <% } %>
+          <% if(page <=1) { %>
+            <li class="page-item disabled"><a class="page-link" href="/?page=<%=page-1%>">Previous</a></li>
+            <% } %>
+              <% for(let i=iterator; i <=endingLink; i++) { %>
+                <% if(i===page) { %>
+                  <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="/?page=<%=i%>">
+                      <%=i%>
+                    </a>
+                  </li>
+                  <% continue; %>
+                    <% } %>
+                      <li class="page-item"><a class="page-link" href="/?page=<%=i%>">
+                          <%=i%>
+                        </a></li>
+                      <% } %>
+                        <% if(page < numberOfPages) { %>
+                          <li class="page-item"><a class="page-link" href="/?page=<%=page+1%>">Next</a></li>
+                          <% } %>
+                            <% if(page>= numberOfPages) { %>
+                              <li class="page-item disabled"><a class="page-link" href="/?page=<%=page+1%>">Next</a>
+                              </li>
+                              <% } %>
     </ul>
   </nav>
 
   <footer class="container-fluid d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
     <div class="col-md-4 d-flex align-items-center footline">
-      <span class="mb-3 mb-md-0 text-body-secondary">Made by <a href="#" target="_blank" class="linkedin">Dhruv Soni</a></span>
+      <span class="mb-3 mb-md-0 text-body-secondary">Made by <a href="#" target="_blank" class="linkedin">Dhruv
+          Soni</a></span>
     </div>
 
     <ul class="nav col-md-4 justify-content-end align-items-center list-unstyled d-flex">
-      <a class="ms-4" href="https://github.com/sonidhruv26" style="transform: scale(1.5);"><i class="bi bi-github"></i></a></li>
-      <a class="ms-4" href="https://www.linkedin.com/in/dhruv-soni-b001a324b" style="transform: scale(1.5);"><i class="bi bi-linkedin"></i></a></li>
-      <a class="ms-4" href="https://www.instagram.com/d_1o_s/" style="transform: scale(1.5);"><i class="bi bi-instagram"></i></a></li>
+      <a class="ms-4" href="https://github.com/sonidhruv26" style="transform: scale(1.5);"><i
+          class="bi bi-github"></i></a></li>
+      <a class="ms-4" href="https://www.linkedin.com/in/dhruv-soni-b001a324b" style="transform: scale(1.5);"><i
+          class="bi bi-linkedin"></i></a></li>
+      <a class="ms-4" href="https://www.instagram.com/d_1o_s/" style="transform: scale(1.5);"><i
+          class="bi bi-instagram"></i></a></li>
     </ul>
   </footer>
 
@@ -95,10 +185,26 @@
         button.innerHTML = button.innerHTML === "Read More" ? "Read Less" : "Read More";
       });
     });
+
+    const reset = document.getElementById('reset');
+    reset.addEventListener("click", () => {
+      window.location = "/";
+    });
+
+    const filterBtn = document.querySelector('.filter-btn');
+    const filterDiv = document.querySelector('.filter-div');
+    filterBtn.addEventListener("click", () => {
+      filterBtn.classList.toggle(".active");
+      filterDiv.classList.toggle("expanded");
+      filterBtn.ariaPressed = true;
+    });
+
+
+
   </script>
-  <script type="text/javascript" src="https://kit.fontawesome.com/50a82cfbfd.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"></script>
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
