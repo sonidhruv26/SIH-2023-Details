@@ -45,6 +45,11 @@ app.get("/", (req, resp) => {
         iterator -= page + 2 - numberOfPages;
       }
 
+      const paginationLinks = {
+        previous: null,
+        next: null
+      };
+
       // For filter select-items
       const themeQry =
         "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
@@ -69,7 +74,8 @@ app.get("/", (req, resp) => {
               orgResult,
               theme,
               category,
-              org
+              org,
+              paginationLinks
             });
           });
         });
