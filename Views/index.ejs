@@ -27,7 +27,7 @@
   </nav>
 
   <div class="container-fluid">
-    <h1 class="mb-4">List of Smart India Hackathon Problems</h1>
+    <h1 class="mb-4" id="up">List of Smart India Hackathon Problems</h1>
     <form action="/filter" method="get" class="filter mb-3">
       <button type="button" class="btn btn-primary filter-btn" data-bs-toggle="button" id="filter-btn"><i
           class="fa-solid fa-filter"></i>
@@ -126,11 +126,11 @@
       <% }); %>
   </div>
 
-  <a class="scroll-down" href="#bottom">
-    <i class="fa-solid fa-arrow-down"></i>
+  <a class="scroll-down" href="#up">
+    <i class="fa-solid fa-arrow-up"></i>
   </a>
 
-  <nav aria-label="Page navigation example" id="bottom">
+  <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
       <% if(paginationLinks.previous) { %>
         <li class="page-item"><a class="page-link" href="<%= paginationLinks.previous %>">Previous</a></li>
