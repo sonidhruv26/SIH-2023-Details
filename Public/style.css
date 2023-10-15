@@ -18,7 +18,7 @@ body {
 }
 
 .show-more {
-    max-height: 1000px;
+    max-height: 1500px;
     transition: max-height 0.5s ease-in-out;
 }
 
