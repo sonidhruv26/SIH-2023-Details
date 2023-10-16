@@ -134,5 +134,20 @@ footer a {
     .scroll-down {
         display: none !important;
     }
-
+    footer>div,
+    footer>span {
+        display: flex;
+        width: 100%;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    .links {
+        display: flex;
+        width: 100%;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-top: 20px;
+        margin-inline: 0;
+        gap: 30px;
+    }
 }
