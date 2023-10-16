@@ -84,7 +84,7 @@ app.get("/", (req, resp) => {
                   paginationLinks,
                   countResult
                 });
-              })
+              });
             });
           });
         });
@@ -177,20 +177,25 @@ app.get("/filter", (req, resp) => {
           if (err) throw err;
           mysql.query(orgQry, (err, orgResult) => {
             if (err) throw err;
-            resp.render("index", {
-              data: result,
-              page,
-              iterator,
-              endingLink,
-              numberOfPages,
-              themeResult,
-              categoryResult,
-              orgResult,
-              theme,
-              category,
-              org,
-              paginationLinks
-            });
+            mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
+              if (err) throw err;
+              // console.log(countResult[0].count);
+              resp.render("index", {
+                data: result,
+                page,
+                iterator,
+                endingLink,
+                numberOfPages,
+                themeResult,
+                categoryResult,
+                orgResult,
+                theme,
+                category,
+                org,
+                paginationLinks,
+                countResult
+              });
+            })
           });
         });
       });

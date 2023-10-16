@@ -126,6 +126,16 @@ footer a {
     color: black;
 }
 
+.links {
+    display: flex;
+    gap: 30px;
+    margin-inline: 10px;
+}
+
+.links i:hover {
+    text-shadow: 0px 0px 1px;
+}
+
 .linkedin {
     color: #198754;
 }
@@ -134,6 +144,15 @@ footer a {
     .scroll-down {
         display: none !important;
     }
+
+    .footline {
+        display: flex;
+        width: 100%;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-bottom: 10px;
+    }
+
     footer>div,
     footer>span {
         display: flex;
