@@ -17,6 +17,7 @@ app.get("/", (req, resp) => {
   category = "";
   org = "";
 
+  let countUpdate = "Update visitor_count SET count = count + 1";
   let viewAll = "Select * from sih_details";
   mysql.query(viewAll, (err, result) => {
     if (err) throw err;
@@ -63,19 +64,27 @@ app.get("/", (req, resp) => {
           if (err) throw err;
           mysql.query(orgQry, (err, orgResult) => {
             if (err) throw err;
-            resp.render("index", {
-              data: result,
-              page,
-              iterator,
-              endingLink,
-              numberOfPages,
-              themeResult,
-              categoryResult,
-              orgResult,
-              theme,
-              category,
-              org,
-              paginationLinks
+            mysql.query(countUpdate, (err, countUpdate) => {
+              if (err) throw err;
+              mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
+                if (err) throw err;
+                // console.log(countResult[0].count);
+                resp.render("index", {
+                  data: result,
+                  page,
+                  iterator,
+                  endingLink,
+                  numberOfPages,
+                  themeResult,
+                  categoryResult,
+                  orgResult,
+                  theme,
+                  category,
+                  org,
+                  paginationLinks,
+                  countResult
+                });
+              })
             });
           });
         });
