@@ -1,37 +1,51 @@
-# Smart India Hackathon 2023
+# Smart India Hackathon Dashboard
 
-This repository contains the code for Smart India Hackathon 2023 web application.
+Welcome to the Smart India Hackathon Dashboard, a comprehensive platform that centralizes the exploration of challenges for the Smart India Hackathon 2023. This web application allows users to browse, filter, and discover hackathon problems based on themes, categories, and organizing organizations. Dive into a curated list of hackathon problems and unlock a world of innovation and problem-solving.
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [How to Use](#how-to-use)
 - [Contributing](#contributing)
 - [License](#license)
+- [Contact](#contact)
 
-## Overview
+## Features
 
-This web application provides a platform to view a list of Smart India Hackathon 2023 problems. It utilizes EJS for rendering and MySQL for database interaction.
+- Browse a curated list of problems for Smart India Hackathon 2023.
+- Filter problems by themes, categories, and organizing organizations.
+- Read problem descriptions and gain insights into problem creators' details.
+- Seamless navigation and user-friendly interface for enhanced user experience.
 
-## Installation
+## Technologies Used
 
-1. Clone this repository:
-   ```bash
-   git clone <https://github.com/sonidhruv26/SIH-2023-Details>
-   cd <https://github.com/sonidhruv26/SIH-2023-Details>
-   ```
+- HTML, CSS, JavaScript
+- Node.js, Express.js
+- MySQL
+- Bootstrap
+- EJS
+- PHP
 
-2. Install the dependencies:
-   ```bash
-   npm install
-   ```
+## How to Use
 
-3. Run the application:
-   ```bash
-   node app.js
-   ```
+1. Clone the repository locally.
+2. Install necessary dependencies using `npm install`.
+3. Run the application using `node app.js`.
+4. Access the dashboard via the provided URL.
 
 ## Contributing
 
-Feel free to contribute to this project. Please follow [contributing guidelines](CONTRIBUTING.md).
+We welcome contributions from the community to enhance the functionality and user experience of the Smart India Hackathon Dashboard. If you'd like to contribute, please follow these guidelines:
+
+1. Fork the repository and clone it locally.
+2. Create a new branch for your contribution.
+3. Make your changes and ensure they align with the project's scope.
+4. Test your changes thoroughly.
+5. Submit a pull request with a clear description of your changes.
+
+## Contact
+
+For inquiries and feedback, please contact:
+
+[Dhruv Soni](mailto:sonidhruv535@gmail.com)
