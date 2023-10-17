@@ -18,8 +18,8 @@ This web application provides a platform to view a list of Smart India Hackathon
 
 1. Clone this repository:
    ```bash
-   git clone <repository_url>
-   cd <repository_directory>
+   git clone <https://github.com/sonidhruv26/SIH-2023-Details>
+   cd <https://github.com/sonidhruv26/SIH-2023-Details>
    ```
 
 2. Install the dependencies:
