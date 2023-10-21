@@ -12,7 +12,7 @@ const db = mysql.createConnection({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB,
-    // ssl: {ca:fs.readFileSync("D:\\Dhruv Soni\\Downloads\\DigiCertGlobalRootCA.crt.pem")}
+    // ssl: { ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem") }
 });
 
 db.connect(err => {
