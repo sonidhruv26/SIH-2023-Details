@@ -46,17 +46,29 @@ app.get("/", (req, resp) => {
         iterator -= page + 2 - numberOfPages;
       }
 
+      const startPage = Math.max(1, page - 2);
+      const endPage = Math.min(numberOfPages, startPage + 4);
+
       const paginationLinks = {
-        previous: null,
-        next: null
+        previous: page > 1 ? `/?page=${page - 1}` : null,
+        next: page < numberOfPages ? `/?page=${page + 1}` : null,
+        pages: [],
       };
+
+      for (let i = startPage; i <= endPage; i++) {
+        paginationLinks.pages.push({
+          page: i,
+          url: `/?page=${i}`,
+          isActive: i === page,
+        });
+      }
 
       // For filter select-items
       const themeQry =
         "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
       const categoryQry = "SELECT DISTINCT Category FROM sih_details";
       const orgQry =
-        "SELECT DISTINCT ProblemCreatorsOrganization FROM sih_details ORDER BY ProblemCreatorsOrganization ASC";
+        "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
 
       mysql.query(themeQry, (err, themeResult) => {
         if (err) throw err;
@@ -105,23 +117,23 @@ app.get("/filter", (req, resp) => {
   if (theme === `` && category === `` && org === ``) {
     viewAll = `Select * from sih_details `;
   } else if (theme === `` && category === ``) {
-    viewAll = `Select * from sih_details WHERE ProblemCreatorsOrganization = '${org}' `;
+    viewAll = `Select * from sih_details WHERE ProblemCreatersOrganization = '${org}' `;
   } else if (theme === `` && org === ``) {
     viewAll = `Select * from sih_details WHERE Category = '${category}' `;
   } else if (category === `` && org === ``) {
     viewAll = `Select * from sih_details WHERE TechnologyBucket = '${theme}' `;
   } else if (theme === ``) {
-    viewAll = `Select * from sih_details WHERE Category = '${category}' AND ProblemCreatorsOrganization = '${org}' `;
+    viewAll = `Select * from sih_details WHERE Category = '${category}' AND ProblemCreatersOrganization = '${org}' `;
   } else if (category === ``) {
-    viewAll = `Select * from sih_details WHERE TechnologyBucket = '${theme}' AND ProblemCreatorsOrganization = '${org}' `;
+    viewAll = `Select * from sih_details WHERE TechnologyBucket = '${theme}' AND ProblemCreatersOrganization = '${org}' `;
   } else if (org === ``) {
     viewAll = `Select * from sih_details WHERE TechnologyBucket = '${theme}' AND Category = '${category}' `;
   } else {
-    viewAll = `Select * from sih_details WHERE TechnologyBucket = '${theme}' AND Category = '${category}' AND ProblemCreatorsOrganization = '${org}' `;
+    viewAll = `Select * from sih_details WHERE TechnologyBucket = '${theme}' AND Category = '${category}' AND ProblemCreatersOrganization = '${org}' `;
   }
 
   mysql.query(viewAll, (err, result) => {
-
+    // console.log(result);
     if (err) throw err;
     const numOfResults = result.length;
     let numberOfPages;
@@ -169,7 +181,7 @@ app.get("/filter", (req, resp) => {
         "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
       const categoryQry = "SELECT DISTINCT Category FROM sih_details";
       const orgQry =
-        "SELECT DISTINCT ProblemCreatorsOrganization FROM sih_details ORDER BY ProblemCreatorsOrganization ASC";
+        "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
 
       mysql.query(themeQry, (err, themeResult) => {
         if (err) throw err;
@@ -179,7 +191,7 @@ app.get("/filter", (req, resp) => {
             if (err) throw err;
             mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
               if (err) throw err;
-              // console.log(countResult[0].count);
+              console.log(countResult[0].count);
               resp.render("index", {
                 data: result,
                 page,
