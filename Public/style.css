@@ -10,6 +10,44 @@ body {
     color: darkorange;
 }
 
+.search-filter {
+    background-color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+.filter-div {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s linear;
+}
+
+.filter-div.expanded {
+    max-height: 800px;
+}
+
+.submit,
+.reset {
+    margin-block: 1rem;
+}
+
+.filter-btn {
+    width: fit-content;
+    margin: 10px;
+}
+
+.filter-btn.active {
+    color: #0d6efd;
+    background-color: transparent;
+    border-color: #0d6efd;
+}
+
+.filter-btn.active:hover {
+    color: var(--bs-btn-active-color);
+    background-color: #0d6efd;
+    border-color: var(--bs-btn-active-border-color);
+}
+
 .description-data {
     text-align: justify;
     max-height: 50px;
@@ -66,44 +104,6 @@ body {
     align-items: center;
     text-decoration: none;
     z-index: 9999;
-}
-
-.filter {
-    background-color: #fff;
-    padding: 8px 16px;
-    border-radius: 5px;
-    transition: height 0.2s ease;
-}
-
-.filter-div {
-    max-height: 0px;
-    overflow: hidden;
-    transition: max-height 0.5s linear;
-}
-
-.filter-div.expanded {
-    max-height: 800px;
-}
-
-.submit,
-.reset {
-    margin-block: 1rem;
-}
-
-.filter-btn {
-    margin-block: 10px;
-}
-
-.filter-btn.active {
-    color: #0d6efd;
-    background-color: transparent;
-    border-color: #0d6efd;
-}
-
-.filter-btn.active:hover {
-    color: var(--bs-btn-active-color);
-    background-color: #0d6efd;
-    border-color: var(--bs-btn-active-border-color);
 }
 
 .scroll-down:hover {

@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="https://kit.fontawesome.com/50a82cfbfd.js" crossorigin="anonymous"></script>
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="manifest" href="assets/site.webmanifest">
-  <script type="text/javascript" src="https://kit.fontawesome.com/50a82cfbfd.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -27,71 +27,92 @@
   </nav>
 
   <div class="container-fluid">
-    <h1 class="mb-4">List of Smart India Hackathon Problems</h1>
-    <form action="/filter" method="get" class="filter mb-3">
-      <button type="button" class="btn btn-primary filter-btn" data-bs-toggle="button" id="filter-btn"><i
-          class="fa-solid fa-filter"></i>
-        Filter</button>
-      <div class="filter-div">
-        <div class="row-auto">
-          <div class="col-auto">
-            <label for="theme" class="form-label">Select Theme</label>
-            <select name="theme" id="theme" class="form-select">
-              <% if (theme !=="" ) { %>
-                <option value="<%= theme %>" selected>
-                  <%= theme %>
-                </option>
-                <% } %>
-                  <hr>
-                  <option value="">All</option>
-                  <% themeResult.forEach(entry=> { %>
-                    <option value="<%= entry.TechnologyBucket %>">
-                      <%= entry.TechnologyBucket %>
-                    </option>
-                    <% }); %>
-            </select>
-          </div>
-          <div class="col-auto">
-            <label for="category" class="form-label">Category</label>
-            <select name="category" id="category" class="form-select">
-              <% if (category !=="" ) { %>
-                <option value="<%= category %>" selected>
-                  <%= category %>
-                </option>
-                <% } %>
-                  <hr>
-                  <option value="">All</option>
-                  <% categoryResult.forEach(entry=> { %>
-                    <option value="<%= entry.Category %>">
-                      <%= entry.Category %>
-                    </option>
-                    <% }); %>
-            </select>
-          </div>
-          <div class="col-auto">
-            <label for="org" class="form-label">Organization</label>
-            <select name="org" id="org" class="form-select">
-              <% if (org !=="" ) { %>
-                <option value="<%= org %>" selected>
-                  <%= org %>
-                </option>
-                <% } %>
-                  <hr>
-                  <option value="">All</option>
-                  <% orgResult.forEach(entry=> { %>
-                    <option value="<%= entry.ProblemCreatersOrganization %>">
-                      <%= entry.ProblemCreatersOrganization %>
-                    </option>
-                    <% }); %>
-            </select>
-          </div>
-          <div class="col-auto">
-            <input class="btn btn-success submit" type="submit" value="Submit">
-            <input type="reset" class="btn btn-danger reset" id="reset" value="Reset">
-          </div>
-        </div>
+
+    <h1 class="display-5 mb-4">List of Smart India Hackathon Problems</h1>
+
+    <div class="search-filter mb-3">
+
+      <div class="row justify-content-between align-items-center">
+
+        <button type="button" class="btn btn-primary filter-btn col-8" data-bs-toggle="button" id="filter-btn"><i
+            class="fa-solid fa-filter"></i>
+          Filter</button>
+
+        <form action="/search" class="d-flex search-form col-4" role="search" method="get">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+          <button class="btn btn-success" type="submit">Search</button>
+        </form>
+
       </div>
-    </form>
+
+      <div class="row">
+
+        <form action="/filter" method="get" class="filter col-12">
+          <div class="filter-div">
+            <div class="row-auto">
+              <div class="col-auto">
+                <label for="theme" class="form-label">Select Theme</label>
+                <select name="theme" id="theme" class="form-select">
+                  <% if (theme !=="" ) { %>
+                    <option value="<%= theme %>" selected>
+                      <%= theme %>
+                    </option>
+                    <% } %>
+                      <hr>
+                      <option value="">All</option>
+                      <% themeResult.forEach(entry=> { %>
+                        <option value="<%= entry.TechnologyBucket %>">
+                          <%= entry.TechnologyBucket %>
+                        </option>
+                        <% }); %>
+                </select>
+              </div>
+              <div class="col-auto">
+                <label for="category" class="form-label">Category</label>
+                <select name="category" id="category" class="form-select">
+                  <% if (category !=="" ) { %>
+                    <option value="<%= category %>" selected>
+                      <%= category %>
+                    </option>
+                    <% } %>
+                      <hr>
+                      <option value="">All</option>
+                      <% categoryResult.forEach(entry=> { %>
+                        <option value="<%= entry.Category %>">
+                          <%= entry.Category %>
+                        </option>
+                        <% }); %>
+                </select>
+              </div>
+              <div class="col-auto">
+                <label for="org" class="form-label">Organization</label>
+                <select name="org" id="org" class="form-select">
+                  <% if (org !=="" ) { %>
+                    <option value="<%= org %>" selected>
+                      <%= org %>
+                    </option>
+                    <% } %>
+                      <hr>
+                      <option value="">All</option>
+                      <% orgResult.forEach(entry=> { %>
+                        <option value="<%= entry.ProblemCreatersOrganization %>">
+                          <%= entry.ProblemCreatersOrganization %>
+                        </option>
+                        <% }); %>
+                </select>
+              </div>
+              <div class="col-auto">
+                <input class="btn btn-success submit" type="submit" value="Submit">
+                <input type="reset" class="btn btn-danger reset" id="reset" value="Reset">
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+
     <% data.forEach(entry=> { %>
       <div class="card mb-3">
         <div class="row g-0">
