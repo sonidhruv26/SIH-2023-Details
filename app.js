@@ -135,7 +135,7 @@ app.get("/", async (req, resp) => {
     });
   } catch (error) {
     console.error('Error:', error.message);
-
+    
     theme = "";
     category = "";
     org = "";
@@ -229,7 +229,7 @@ app.get("/", async (req, resp) => {
 
     });
   }
-
+  return resp.status(500).send('An error occurred unfortunately while processing the request. Please try again later.');
 });
 
 app.get("/search", (req, resp) => {
@@ -354,7 +354,10 @@ app.get("/filter", (req, resp) => {
 
   mysql.query(viewAll, (err, result) => {
     // console.log(result);
-    if (err) throw err;
+    if (err){
+      console.error('Error:', err.message);
+      return resp.status(500).send('An error occurred while filtering the data');
+    }
     const numOfResults = result.length;
     let numberOfPages;
     if (numOfResults >= resultsPerPage) {
