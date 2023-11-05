@@ -229,7 +229,7 @@ app.get("/", async (req, resp) => {
 
 });
 
-app.get('/search', (req, resp) => {
+app.get("/search", (req, resp) => {
   const searchTerm = req.query.search;
 
   theme = "";
