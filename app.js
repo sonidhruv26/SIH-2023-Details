@@ -20,19 +20,22 @@ app.get("/", async (req, resp) => {
   const ipAdd = req.headers['x-forwarded-for'] ||
     req.headers['x-real-ip'] ||
     req.clientIp;
-  
+
 
   try {
     const response = await axios.get(`http://api.ipstack.com/${ipAdd}?access_key=5c2243be17b627e61439797c8b5a832a`);
     const locationData = response.data;
     console.log(locationData);
 
-    const { ip, country, city, latitude, longitude, time_zone } = locationData;
-    const sql = `INSERT INTO visitor_locations (ip_address, country, city, latitude, longitude, time_zone) 
-                     VALUES (?, ?, ?, ?, ?, ?)
-                     ON DUPLICATE KEY UPDATE count = count + 1`;
+    const currentTime = new Date();
+    const formattedTime = currentTime.toISOString().slice(0, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:MM:SS'
 
-    mysql.query(sql, [ip, country, city, latitude, longitude, time_zone], (err, result) => {
+    const { ip, country, city, latitude, longitude } = locationData;
+    const sql = `INSERT INTO visitor_locations (ip_address, country, city, latitude, longitude, time_zone) 
+                 VALUES (?, ?, ?, ?, ?, ?)
+                 ON DUPLICATE KEY UPDATE count = count + 1, time_zone = ?`;
+
+    mysql.query(sql, [ip, country, city, latitude, longitude, formattedTime, formattedTime], (err, result) => {
       if (err) {
         console.error('Error:', err.message);
       }

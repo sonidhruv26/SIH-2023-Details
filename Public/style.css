@@ -48,6 +48,14 @@ body {
     border-color: var(--bs-btn-active-border-color);
 }
 
+.search-form {
+    width: 100%;
+}
+
+.search-input {
+    border: 1px solid #bbb !important;
+}
+
 .description-data {
     text-align: justify;
     max-height: 50px;
