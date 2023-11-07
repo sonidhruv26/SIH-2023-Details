@@ -135,7 +135,7 @@ app.get("/", async (req, resp) => {
     });
   } catch (error) {
     console.error('Error occurred at catch of / request:', error.message);
-    
+
     theme = "";
     category = "";
     org = "";
@@ -327,6 +327,109 @@ app.get("/search", (req, resp) => {
   });
 });
 
+/*
+  app.get("/search", (req, resp) => {
+  const searchDatabase = async (searchTerm, page) => {
+    const query = `SELECT * FROM sih_details WHERE ID LIKE ? OR Title LIKE ? OR TechnologyBucket LIKE ? OR Category LIKE ? OR ProblemCreatersOrganization LIKE ?`;
+    const params = Array(5).fill(`%${searchTerm}%`);
+  
+    const searchResults = await mysql.queryAsync(query, params);
+  
+    const numOfResults = searchResults.length;
+    const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
+  
+    if (page > numberOfPages) {
+      return { redirect: `/search?search=${searchTerm}&page=${numberOfPages}` };
+    } else if (page < 1) {
+      return { redirect: `/search?search=${searchTerm}&page=1` };
+    }
+  
+    const startingLimit = (page - 1) * resultsPerPage;
+    const viewAll = `Select * from sih_details LIMIT ${startingLimit}, ${resultsPerPage}`;
+    const result = await mysql.queryAsync(viewAll);
+  
+    let iterator = page - 2 > 0 ? page - 2 : 1;
+    let endingLink = iterator + 4 <= numberOfPages ? iterator + 4 : numberOfPages;
+    if (endingLink - iterator < 4) {
+      iterator = Math.max(1, endingLink - 4);
+    }
+  
+    const startPage = Math.max(1, iterator);
+    const endPage = Math.min(numberOfPages, endingLink);
+  
+    const paginationLinks = {
+      previous: page > 1 ? `/search?search=${searchTerm}&page=${page - 1}` : null,
+      next: page < numberOfPages ? `/search?search=${searchTerm}&page=${page + 1}` : null,
+      pages: [],
+    };
+  
+    for (let i = startPage; i <= endPage; i++) {
+      paginationLinks.pages.push({
+        page: i,
+        url: `/?page=${i}`,
+        isActive: i === page,
+      });
+    }
+  
+    return {
+      data: searchResults,
+      page,
+      iterator,
+      endingLink,
+      numberOfPages,
+      result,
+      paginationLinks,
+    };
+  };
+  
+  const getFilterData = async () => {
+    const themeQry = "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
+    const categoryQry = "SELECT DISTINCT Category FROM sih_details";
+    const orgQry = "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
+  
+    const [themeResult, categoryResult, orgResult, countResult] = await Promise.all([
+      mysql.queryAsync(themeQry),
+      mysql.queryAsync(categoryQry),
+      mysql.queryAsync(orgQry),
+      mysql.queryAsync("SELECT * FROM visitor_count"),
+    ]);
+  
+    return { themeResult, categoryResult, orgResult, countResult };
+  };
+  
+  app.get("/search", async (req, resp) => {
+    const searchTerm = req.query.search;
+    const page = req.query.page ? Number(req.query.page) : 1;
+  
+    try {
+      const { redirect, data, result, ...paginationLinks } = await searchDatabase(searchTerm, page);
+  
+      if (redirect) {
+        resp.redirect(redirect);
+      } else {
+        const { themeResult, categoryResult, orgResult, countResult } = await getFilterData();
+  
+        resp.render("index", {
+          data,
+          result,
+          themeResult,
+          categoryResult,
+          orgResult,
+          theme,
+          category,
+          org,
+          paginationLinks,
+          countResult,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      resp.status(500).send("Error searching the database");
+    }
+  });
+});
+*/
+
 app.get("/filter", (req, resp) => {
   const theme = req.query.theme;
   const category = req.query.category;
@@ -354,7 +457,7 @@ app.get("/filter", (req, resp) => {
 
   mysql.query(viewAll, (err, result) => {
     // console.log(result);
-    if (err){
+    if (err) {
       console.error('Error:', err.message);
       return resp.status(500).send('An error occurred while filtering the data');
     }
