@@ -48,7 +48,8 @@ The page uses Bootstrap for styling and Font Awesome for icons.
           Filter</button>
 
         <form action="/search" class="d-flex search-form col-4" role="search" method="get">
-          <input class="form-control me-2 search-input" type="search" placeholder="Search" aria-label="Search" name="search">
+          <input class="form-control me-2 search-input" type="search" placeholder="Search" aria-label="Search"
+            name="search">
           <button class="btn btn-success" type="submit">Search</button>
         </form>
 
@@ -120,38 +121,49 @@ The page uses Bootstrap for styling and Font Awesome for icons.
     </div>
 
     <!-- Problem List -->
-    <% data.forEach(entry=> { %>
-      <div class="card mb-3">
-        <div class="row g-0">
-          <div class="col-md-12">
-            <div class="card-body">
-              <h6 class="card-title text-body-secondary">
-                <%= entry.ID %>
-              </h6>
-              <h2 class="card-title">
-                <%= entry.Title %>
-              </h2>
-              <p class="description-data card-text">
-                <%= entry.Description %>
-              </p>
-              <button class="btn btn-outline-success readmore mb-3">Read More</button>
-              <p class="card-text"><small class="text-body-secondary">
-                  <%= entry.ProblemCreatersOrganization %>
-                </small></p>
-              <p class="card-text"><small class="text-body-secondary">
-                  <%= entry.ProblemCreatorsDepartment %>
-                </small></p>
-              <span class="badge text-bg-success">
-                <%= entry.TechnologyBucket %>
-              </span>
-              <span class="badge text-bg-secondary">
-                <%= entry.Category %>
-              </span>
+    <% if (data.length> 0) { %>
+      <% data.forEach(entry=> { %>
+        <div class="card mb-3">
+          <div class="row g-0">
+            <div class="col-md-12">
+              <div class="card-body">
+                <h6 class="card-title text-body-secondary">
+                  <%= entry.ID %>
+                </h6>
+                <h2 class="card-title">
+                  <%= entry.Title %>
+                </h2>
+                <p class="description-data card-text">
+                  <%= entry.Description %>
+                </p>
+                <button class="btn btn-outline-success readmore mb-3">Read More</button>
+                <p class="card-text"><small class="text-body-secondary">
+                    <%= entry.ProblemCreatersOrganization %>
+                  </small></p>
+                <p class="card-text"><small class="text-body-secondary">
+                    <%= entry.ProblemCreatorsDepartment %>
+                  </small></p>
+                <span class="badge text-bg-success">
+                  <%= entry.TechnologyBucket %>
+                </span>
+                <span class="badge text-bg-secondary">
+                  <%= entry.Category %>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <% }); %>
+        <% }); %>
+          <% } else { %>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">No Results Found</h5>
+                <p class="card-text">Sorry, there are no matching results for your search.</p>
+                <a href="/" class="btn btn-primary">Home</a>
+              </div>
+            </div>
+            <% } %>
+
   </div>
 
   <!-- Scroll to Top Button -->

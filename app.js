@@ -31,9 +31,7 @@ app.get("/", async (req, resp) => {
     const formattedTime = currentTime.toISOString().slice(0, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:MM:SS'
 
     const { ip, country, city, latitude, longitude } = locationData;
-    const sql = `INSERT INTO visitor_locations (ip_address, country, city, latitude, longitude, time_zone) 
-                 VALUES (?, ?, ?, ?, ?, ?)
-                 ON DUPLICATE KEY UPDATE count = count + 1, time_zone = ?`;
+    const sql = `INSERT INTO visitor_locations (ip_address, country, city, latitude, longitude, time_zone) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE count = count + 1, time_zone = ?`;
 
     mysql.query(sql, [ip, country, city, latitude, longitude, formattedTime, formattedTime], (err, result) => {
       if (err) {
@@ -243,11 +241,32 @@ app.get("/search", (req, resp) => {
   const params = Array(5).fill(`%${searchTerm}%`);
 
   mysql.query(query, params, (err, searchResults) => {
-    if (err) {
-      console.error(err);
-      resp.status(500).send('Error searching the database');
+    if (searchResults.length === 0) {
+      // sending empty data to render the page but other data is required for the page to render
+      mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
+        if (err) throw err;
+        resp.render("index", {
+          data: [],
+          page: 1,
+          iterator: 1,
+          endingLink: 1,
+          numberOfPages: 1,
+          themeResult: [],
+          categoryResult: [],
+          orgResult: [],
+          theme,
+          category,
+          org,
+          paginationLinks: {
+            previous: null,
+            next: null,
+            pages: [],
+          },
+          countResult
+        });
+      });
     } else {
-
+      console.log("Search results:", searchResults);
       const numOfResults = searchResults.length;
       const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
 
@@ -329,105 +348,123 @@ app.get("/search", (req, resp) => {
 
 /*
   app.get("/search", (req, resp) => {
-  const searchDatabase = async (searchTerm, page) => {
-    const query = `SELECT * FROM sih_details WHERE ID LIKE ? OR Title LIKE ? OR TechnologyBucket LIKE ? OR Category LIKE ? OR ProblemCreatersOrganization LIKE ?`;
-    const params = Array(5).fill(`%${searchTerm}%`);
-  
-    const searchResults = await mysql.queryAsync(query, params);
-  
+  const searchTerm = req.query.search;
+
+  theme = "";
+  category = "";
+  org = "";
+
+  const query = `SELECT * FROM sih_details WHERE ID LIKE ? OR Title LIKE ? OR TechnologyBucket LIKE ? OR Category LIKE ? OR ProblemCreatersOrganization LIKE ?`;
+  const params = Array(5).fill(`%${searchTerm}%`);
+
+  mysql.query(query, params, (err, searchResults) => {
+    if (err) {
+      console.error(err);
+      return resp.status(500).send('Error searching the database');
+    }
+
     const numOfResults = searchResults.length;
     const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
-  
+
+    let page = req.query.page ? Number(req.query.page) : 1;
+
     if (page > numberOfPages) {
-      return { redirect: `/search?search=${searchTerm}&page=${numberOfPages}` };
+      resp.redirect(`/search?search=${searchTerm}&page=${numberOfPages}`);
     } else if (page < 1) {
-      return { redirect: `/search?search=${searchTerm}&page=1` };
+      resp.redirect(`/search?search=${searchTerm}&page=1`);
     }
-  
-    const startingLimit = (page - 1) * resultsPerPage;
-    const viewAll = `Select * from sih_details LIMIT ${startingLimit}, ${resultsPerPage}`;
-    const result = await mysql.queryAsync(viewAll);
-  
-    let iterator = page - 2 > 0 ? page - 2 : 1;
-    let endingLink = iterator + 4 <= numberOfPages ? iterator + 4 : numberOfPages;
-    if (endingLink - iterator < 4) {
-      iterator = Math.max(1, endingLink - 4);
-    }
-  
-    const startPage = Math.max(1, iterator);
-    const endPage = Math.min(numberOfPages, endingLink);
-  
-    const paginationLinks = {
-      previous: page > 1 ? `/search?search=${searchTerm}&page=${page - 1}` : null,
-      next: page < numberOfPages ? `/search?search=${searchTerm}&page=${page + 1}` : null,
-      pages: [],
-    };
-  
-    for (let i = startPage; i <= endPage; i++) {
-      paginationLinks.pages.push({
-        page: i,
-        url: `/?page=${i}`,
-        isActive: i === page,
+
+    if (numOfResults === 0) {
+      // No search results, handle accordingly
+      return resp.render("index", {
+        data: [], // Empty array for no results
+        page,
+        iterator: 1,
+        endingLink: 1,
+        numberOfPages: 1,
+        themeResult: [], // Empty array for no results
+        categoryResult: [], // Empty array for no results
+        orgResult: [], // Empty array for no results
+        theme,
+        category,
+        org,
+        paginationLinks: {
+          previous: null,
+          next: null,
+          pages: [],
+        },
+        countResult: [] // Empty array for no results
       });
     }
-  
-    return {
-      data: searchResults,
-      page,
-      iterator,
-      endingLink,
-      numberOfPages,
-      result,
-      paginationLinks,
-    };
-  };
-  
-  const getFilterData = async () => {
-    const themeQry = "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
-    const categoryQry = "SELECT DISTINCT Category FROM sih_details";
-    const orgQry = "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
-  
-    const [themeResult, categoryResult, orgResult, countResult] = await Promise.all([
-      mysql.queryAsync(themeQry),
-      mysql.queryAsync(categoryQry),
-      mysql.queryAsync(orgQry),
-      mysql.queryAsync("SELECT * FROM visitor_count"),
-    ]);
-  
-    return { themeResult, categoryResult, orgResult, countResult };
-  };
-  
-  app.get("/search", async (req, resp) => {
-    const searchTerm = req.query.search;
-    const page = req.query.page ? Number(req.query.page) : 1;
-  
-    try {
-      const { redirect, data, result, ...paginationLinks } = await searchDatabase(searchTerm, page);
-  
-      if (redirect) {
-        resp.redirect(redirect);
-      } else {
-        const { themeResult, categoryResult, orgResult, countResult } = await getFilterData();
-  
-        resp.render("index", {
-          data,
-          result,
-          themeResult,
-          categoryResult,
-          orgResult,
-          theme,
-          category,
-          org,
-          paginationLinks,
-          countResult,
+
+    const startingLimit = (page - 1) * resultsPerPage;
+
+    // Continue with the rest of the code to render the page for valid search results
+    viewAll = `Select * from sih_details LIMIT ${startingLimit}, ${resultsPerPage}`;
+    mysql.query(viewAll, (err, result) => {
+      if (err) throw err;
+
+      let iterator = page - 2 > 0 ? page - 2 : 1;
+      let endingLink = iterator + 4 <= numberOfPages ? iterator + 4 : numberOfPages;
+      if (endingLink - iterator < 4) {
+        iterator = Math.max(1, endingLink - 4);
+      }
+
+      const startPage = Math.max(1, iterator);
+      const endPage = Math.min(numberOfPages, endingLink);
+
+      const paginationLinks = {
+        previous: page > 1 ? `/search?search=${searchTerm}&page=${page - 1}` : null,
+        next: page < numberOfPages ? `/search?search=${searchTerm}&page=${page + 1}` : null,
+        pages: [],
+      };
+
+      for (let i = startPage; i <= endPage; i++) {
+        paginationLinks.pages.push({
+          page: i,
+          url: `/?page=${i}`,
+          isActive: i === page,
         });
       }
-    } catch (err) {
-      console.error(err);
-      resp.status(500).send("Error searching the database");
-    }
+
+      // For filter select-items
+      const themeQry =
+        "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
+      const categoryQry = "SELECT DISTINCT Category FROM sih_details";
+      const orgQry =
+        "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
+
+      mysql.query(themeQry, (err, themeResult) => {
+        if (err) throw err;
+        mysql.query(categoryQry, (err, categoryResult) => {
+          if (err) throw err;
+          mysql.query(orgQry, (err, orgResult) => {
+            if (err) throw err;
+            mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
+              if (err) throw err;
+              resp.render("index", {
+                data: result,
+                page,
+                iterator,
+                endingLink,
+                numberOfPages,
+                themeResult,
+                categoryResult,
+                orgResult,
+                theme,
+                category,
+                org,
+                paginationLinks,
+                countResult
+              });
+            });
+          });
+        });
+      });
+    });
   });
 });
+
 */
 
 app.get("/filter", (req, resp) => {
