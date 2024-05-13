@@ -1,2 +1,34 @@
-/test.txt
-/.env
+# Ignore node_modules directory
+node_modules/
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore environment-specific files
+.env
+.env.local
+.env.*.local
+
+# Ignore log files
+*.log
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore dependency lock files
+yarn.lock
+package-lock.json
+
+# Ignore compiled code
+*.class
+*.jar
+*.war
+
+# Ignore database files
+*.db
+*.sqlite
+
+# Ignore sensitive information
+secrets.json
