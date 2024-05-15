@@ -8,4 +8,23 @@ node_modules
 .env.local
 .env.*.local
 
+# Ignore Application file
 package-lock.json
+
+# Ignore Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore Editor directories and files
+.vscode
+
+# Ignore build files
+build
+dist
+
+# Ignore coverage files
+coverage
+
+# Ignore .DS_Store file
+.DS_Store
