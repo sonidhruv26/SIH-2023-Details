@@ -2,10 +2,10 @@
   "name": "sih-2023-details",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "sonidhruv26 <sonidhruv.2603@gmail.com>",
@@ -13,8 +13,8 @@
   "dependencies": {
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
+    "ejs": "^3.1.10",
     "express": "^4.18.2",
-    "hbs": "^4.2.0",
     "mysql": "^2.18.1"
   },
   "repository": "https://github.com/sonidhruv26/SIH-2023-Details.git",
