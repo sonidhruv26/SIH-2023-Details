@@ -11,10 +11,12 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use("/", homeRoutes);
-app.use("/", filterRoutes);
-app.use("/", searchRoutes);
+app.use("/filter", filterRoutes);
+app.use("/search", searchRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

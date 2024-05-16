@@ -17,5 +17,8 @@
     "hbs": "^4.2.0",
     "mysql": "^2.18.1"
   },
-  "repository": "https://github.com/sonidhruv26/SIH-2023-Details.git"
+  "repository": "https://github.com/sonidhruv26/SIH-2023-Details.git",
+  "engines": {
+    "node": "20.x"
+  }
 }
