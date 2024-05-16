@@ -14,9 +14,9 @@ app.use(express.static(path.join(__dirname, "Public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/", homeRoutes);
-app.use("/filter", filterRoutes);
-app.use("/search", searchRoutes);
+app.get("/", homeRoutes);
+app.get("/filter", filterRoutes);
+app.get("/search", searchRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
