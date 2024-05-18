@@ -30,7 +30,23 @@ exports.getFilteredResults = (req, resp) => {
   mysql.query(viewAll, (err, result) => {
     if (err) {
       console.error('Error:', err.message);
-      return resp.status(500).send('An error occurred while filtering the data');
+      // render same page with error message
+      return resp.render("index", {
+        data: [],
+        page: 1,
+        iterator: 1,
+        endingLink: 1,
+        numberOfPages: 1,
+        theme: "",
+        category: "",
+        org: "",
+        paginationLinks: {
+          previous: null,
+          next: null,
+        },
+        countResult: [],
+        error: "No results found. Please try again with different filters",
+      });
     }
 
     const numOfResults = result.length;
