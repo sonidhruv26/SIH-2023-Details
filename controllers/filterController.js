@@ -125,16 +125,13 @@ exports.getFilteredResults = (req, resp) => {
     const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
 
     let page = req.query.page ? Number(req.query.page) : 1;
-    if (page > numberOfPages) {
-      resp.redirect(`/?page=${numberOfPages}`);
-    } else if (page < 1) {
-      resp.redirect(`/?page=1`);
-    }
+    if (page < 1) page = 1;
+    if (page > numberOfPages) page = numberOfPages;
 
     const startingLimit = (page - 1) * resultsPerPage;
 
     mysql.query(
-      viewAll + ` LIMIT ${startingLimit}, ${resultsPerPage}`,
+      viewAll + `LIMIT ${startingLimit}, ${resultsPerPage}`, params,
       (err, result) => {
         if (err) throw err;
 
