@@ -7,13 +7,13 @@ body {
 }
 
 .navbar h3 {
-    color: darkorange;
+    color: rgb(252, 152, 30);
 }
 
 .search-filter {
     background-color: #fff;
     padding: 8px 16px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .filter-div {
@@ -54,6 +54,10 @@ body {
 
 .search-input {
     border: 1px solid #bbb !important;
+}
+
+.card {
+    border-radius: 10px;
 }
 
 .description-data {

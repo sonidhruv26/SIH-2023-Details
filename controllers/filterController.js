@@ -8,47 +8,35 @@ exports.getFilteredResults = (req, resp) => {
   const theme = req.query.theme || "";
   const category = req.query.category || "";
   const org = req.query.org || "";
+  const searchQuery = req.query.search || "";
 
-  let viewAll;
+  let baseQuery = "SELECT * FROM sih_details WHERE 1=1";
   let params = [];
 
-  switch (true) {
-    case theme === "" && category === "" && org === "":
-      viewAll = `SELECT * FROM sih_details`;
-      break;
-    case theme === "" && category === "":
-      viewAll = `SELECT * FROM sih_details WHERE ProblemCreatersOrganization = ?`;
-      params.push(org);
-      break;
-    case theme === "" && org === "":
-      viewAll = `SELECT * FROM sih_details WHERE Category = ?`;
-      params.push(category);
-      break;
-    case category === "" && org === "":
-      viewAll = `SELECT * FROM sih_details WHERE TechnologyBucket = ?`;
-      params.push(theme);
-      break;
-    case theme === "":
-      viewAll = `SELECT * FROM sih_details WHERE Category = ? AND ProblemCreatersOrganization = ?`;
-      params.push(category, org);
-      break;
-    case category === "":
-      viewAll = `SELECT * FROM sih_details WHERE TechnologyBucket = ? AND ProblemCreatersOrganization = ?`;
-      params.push(theme, org);
-      break;
-    case org === "":
-      viewAll = `SELECT * FROM sih_details WHERE TechnologyBucket = ? AND Category = ?`;
-      params.push(theme, category);
-      break;
-    default:
-      viewAll = `SELECT * FROM sih_details WHERE TechnologyBucket = ? AND Category = ? AND ProblemCreatersOrganization = ?`;
-      params.push(theme, category, org);
-      break;
+  // Apply search query
+  if (searchQuery) {
+    baseQuery += ` AND (Title LIKE ? OR TechnologyBucket LIKE ? OR Category LIKE ? OR Description LIKE ? OR ProblemCreatersOrganization LIKE ?)`;
+    const keyword = `%${searchQuery}%`;
+    params.push(keyword, keyword, keyword, keyword, keyword);
   }
 
-  mysql.query(viewAll, params, (err, result) => {
-    // console.log("result: ", result);
+  // Apply filters to the search results
+  if (theme) {
+    baseQuery += ` AND TechnologyBucket = ?`;
+    params.push(theme);
+  }
 
+  if (category) {
+    baseQuery += ` AND Category = ?`;
+    params.push(category);
+  }
+
+  if (org) {
+    baseQuery += ` AND ProblemCreatersOrganization = ?`;
+    params.push(org);
+  }
+
+  mysql.query(baseQuery, params, (err, result) => {
     if (err) {
       console.error("An error occurred while filtering the data", err);
       resp.render("index", {
@@ -63,6 +51,7 @@ exports.getFilteredResults = (req, resp) => {
         theme,
         category,
         org,
+        searchQuery,
         paginationLinks: {
           previous: null,
           next: null,
@@ -70,53 +59,27 @@ exports.getFilteredResults = (req, resp) => {
         countResult: [],
         error: "An error occurred while filtering the data. Please try again.",
       });
-
-      return console.error("An error occurred while filtering the data", err);
+      return;
     }
 
     if (result.length === 0) {
-      const themeQry =
-        "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
-      const categoryQry = "SELECT DISTINCT Category FROM sih_details";
-      const orgQry =
-        "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
-
-      mysql.query(themeQry, (err, themeResult) => {
-        if (err) throw err;
-        mysql.query(categoryQry, (err, categoryResult) => {
-          if (err) throw err;
-          mysql.query(orgQry, (err, orgResult) => {
-            if (err) throw err;
-            mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
-              if (err) throw err;
-              resp.render("index", {
-                data: [],
-                page: 1,
-                iterator: 1,
-                endingLink: 1,
-                numberOfPages: 1,
-                themeResult,
-                categoryResult,
-                orgResult,
-                theme,
-                category,
-                org,
-                paginationLinks: {
-                  previous: null,
-                  next: null,
-                },
-                countResult,
-                error:
-                  "No results found. Please try again with different filters.",
-              });
-            });
-          });
-        });
+      fetchDropdownsAndRender(resp, {
+        data: [],
+        page: 1,
+        iterator: 1,
+        endingLink: 1,
+        numberOfPages: 1,
+        theme,
+        category,
+        org,
+        searchQuery,
+        paginationLinks: {
+          previous: null,
+          next: null,
+        },
+        error: "No results found. Please try again with different filters.",
       });
-
-      return console.log(
-        "No results found. Please try again with different filters."
-      );
+      return;
     }
 
     console.log("Data filtered successfully");
@@ -131,8 +94,9 @@ exports.getFilteredResults = (req, resp) => {
     const startingLimit = (page - 1) * resultsPerPage;
 
     mysql.query(
-      viewAll + `LIMIT ${startingLimit}, ${resultsPerPage}`, params,
-      (err, result) => {
+      baseQuery + ` LIMIT ${startingLimit}, ${resultsPerPage}`,
+      params,
+      (err, paginatedResult) => {
         if (err) throw err;
 
         let iterator = 1;
@@ -153,50 +117,58 @@ exports.getFilteredResults = (req, resp) => {
             page > 1
               ? `/filter?page=${
                   page - 1
-                }&theme=${theme}&category=${category}&org=${org}`
+                }&theme=${theme}&category=${category}&org=${org}&search=${searchQuery}`
               : null,
           next:
             page < numberOfPages
               ? `/filter?page=${
                   page + 1
-                }&theme=${theme}&category=${category}&org=${org}`
+                }&theme=${theme}&category=${category}&org=${org}&search=${searchQuery}`
               : null,
         };
 
-        const themeQry =
-          "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
-        const categoryQry = "SELECT DISTINCT Category FROM sih_details";
-        const orgQry =
-          "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
-
-        mysql.query(themeQry, (err, themeResult) => {
-          if (err) throw err;
-          mysql.query(categoryQry, (err, categoryResult) => {
-            if (err) throw err;
-            mysql.query(orgQry, (err, orgResult) => {
-              if (err) throw err;
-              mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
-                if (err) throw err;
-                resp.render("index", {
-                  data: result,
-                  page,
-                  iterator,
-                  endingLink,
-                  numberOfPages,
-                  themeResult,
-                  categoryResult,
-                  orgResult,
-                  theme,
-                  category,
-                  org,
-                  paginationLinks,
-                  countResult,
-                });
-              });
-            });
-          });
+        fetchDropdownsAndRender(resp, {
+          data: paginatedResult,
+          page,
+          iterator,
+          endingLink,
+          numberOfPages,
+          theme,
+          category,
+          org,
+          searchQuery,
+          paginationLinks,
         });
       }
     );
   });
 };
+
+// Helper function to fetch dropdowns and render the page
+function fetchDropdownsAndRender(resp, renderData) {
+  const themeQry =
+    "SELECT DISTINCT TechnologyBucket FROM sih_details ORDER BY TechnologyBucket ASC";
+  const categoryQry = "SELECT DISTINCT Category FROM sih_details";
+  const orgQry =
+    "SELECT DISTINCT ProblemCreatersOrganization FROM sih_details ORDER BY ProblemCreatersOrganization ASC";
+
+  mysql.query(themeQry, (err, themeResult) => {
+    if (err) throw err;
+    mysql.query(categoryQry, (err, categoryResult) => {
+      if (err) throw err;
+      mysql.query(orgQry, (err, orgResult) => {
+        if (err) throw err;
+        mysql.query("SELECT * FROM visitor_count", (err, countResult) => {
+          if (err) throw err;
+          resp.render("index", {
+            ...renderData,
+            themeResult,
+            categoryResult,
+            orgResult,
+            countResult,
+          });
+        });
+      });
+    });
+  });
+}
